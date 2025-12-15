@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { InfoTooltip } from './InfoTooltip';
 
 /**
  * Control panel for network architecture and hyperparameters
@@ -31,10 +32,23 @@ export function ControlPanel({
 
   const activations = ['relu', 'sigmoid', 'tanh'];
 
+  const activationDescriptions = {
+    relu: 'ReLU (Rectified Linear Unit): Outputs the input if positive, else 0. Fast and effective, but can "die" if weights become very negative.',
+    sigmoid: 'Sigmoid: Squashes values to 0-1 range. Great for probabilities but can cause vanishing gradients in deep networks.',
+    tanh: 'Tanh: Squashes values to -1 to 1 range. Zero-centered, often better than sigmoid for hidden layers.',
+  };
+
   return (
     <div className="glass rounded-xl p-5 space-y-5">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-[var(--text-primary)]">Controls</h2>
+        <div className="flex items-center">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)]">Controls</h2>
+          <InfoTooltip title="Training Controls">
+            Use these controls to train your neural network. Press <strong>Train</strong> to start, 
+            <strong>Pause</strong> to freeze, <strong>Step</strong> to advance one epoch at a time, 
+            and <strong>Reset</strong> to reinitialize weights randomly.
+          </InfoTooltip>
+        </div>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-[var(--accent-primary)] animate-pulse-glow"></div>
           <span className="text-xs text-[var(--text-muted)]">
@@ -85,7 +99,7 @@ export function ControlPanel({
           disabled={isTraining && !isPaused}
           className="py-2.5 px-4 rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-primary)] font-medium
                    hover:bg-[var(--text-muted)]/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          title="Single step"
+          title="Single step (one epoch)"
         >
           <StepIcon />
         </motion.button>
@@ -95,7 +109,7 @@ export function ControlPanel({
           onClick={onReset}
           className="py-2.5 px-4 rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-primary)] font-medium
                    hover:bg-[var(--text-muted)]/20 transition-colors"
-          title="Reset network"
+          title="Reset network (reinitialize weights)"
         >
           <ResetIcon />
         </motion.button>
@@ -104,7 +118,13 @@ export function ControlPanel({
       {/* Speed Control */}
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-[var(--text-secondary)]">Speed</span>
+          <div className="flex items-center">
+            <span className="text-[var(--text-secondary)]">Training Speed</span>
+            <InfoTooltip title="Epochs per Second">
+              Controls how fast the network trains. Higher values = faster training but less time 
+              to observe changes. Lower values let you watch the learning process more carefully.
+            </InfoTooltip>
+          </div>
           <span className="text-[var(--text-muted)]">{speed} epochs/sec</span>
         </div>
         <input
@@ -121,11 +141,24 @@ export function ControlPanel({
 
       {/* Architecture Controls */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-[var(--text-secondary)]">Architecture</h3>
+        <div className="flex items-center">
+          <h3 className="text-sm font-medium text-[var(--text-secondary)]">Architecture</h3>
+          <InfoTooltip title="Network Architecture">
+            The architecture defines the structure of your neural network. More layers and neurons 
+            can learn more complex patterns, but may also overfit or train slower.
+          </InfoTooltip>
+        </div>
         
         {/* Hidden Layers */}
         <div className="space-y-2">
-          <label className="text-xs text-[var(--text-muted)]">Hidden Layers (comma-separated)</label>
+          <div className="flex items-center">
+            <label className="text-xs text-[var(--text-muted)]">Hidden Layers</label>
+            <InfoTooltip title="Hidden Layers">
+              <p>Hidden layers are the layers between input and output. Enter neuron counts separated by commas.</p>
+              <p className="mt-1"><strong>Example:</strong> "4, 4" = two hidden layers with 4 neurons each.</p>
+              <p className="mt-1"><strong>Tip:</strong> Start small! More neurons can learn complex patterns but train slower.</p>
+            </InfoTooltip>
+          </div>
           <input
             type="text"
             value={localLayers}
@@ -140,7 +173,13 @@ export function ControlPanel({
 
         {/* Activation */}
         <div className="space-y-2">
-          <label className="text-xs text-[var(--text-muted)]">Activation</label>
+          <div className="flex items-center">
+            <label className="text-xs text-[var(--text-muted)]">Activation Function</label>
+            <InfoTooltip title="Activation Functions">
+              <p>Activation functions introduce non-linearity, allowing networks to learn complex patterns.</p>
+              <p className="mt-1 text-[var(--accent-secondary)]">{activationDescriptions[config.activation]}</p>
+            </InfoTooltip>
+          </div>
           <select
             value={config.activation}
             onChange={(e) => onConfigChange({ activation: e.target.value })}
@@ -158,13 +197,27 @@ export function ControlPanel({
 
       {/* Hyperparameters */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-[var(--text-secondary)]">Hyperparameters</h3>
+        <div className="flex items-center">
+          <h3 className="text-sm font-medium text-[var(--text-secondary)]">Hyperparameters</h3>
+          <InfoTooltip title="Hyperparameters">
+            Settings that control how the network learns. Unlike weights, these are set before 
+            training and don't change during the learning process.
+          </InfoTooltip>
+        </div>
         
         {/* Learning Rate */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-[var(--text-muted)]">Learning Rate</span>
-            <span className="text-[var(--accent-secondary)]">{config.learningRate.toFixed(3)}</span>
+            <div className="flex items-center">
+              <span className="text-[var(--text-muted)]">Learning Rate</span>
+              <InfoTooltip title="Learning Rate (α)">
+                <p>Controls how big of a step the network takes when adjusting weights.</p>
+                <p className="mt-1"><strong>Too high:</strong> Fast but may overshoot optimal values (unstable)</p>
+                <p className="mt-1"><strong>Too low:</strong> Stable but very slow to learn</p>
+                <p className="mt-1"><strong>Sweet spot:</strong> Usually between 0.001 and 0.1</p>
+              </InfoTooltip>
+            </div>
+            <span className="text-[var(--accent-secondary)] font-mono">{config.learningRate.toFixed(3)}</span>
           </div>
           <input
             type="range"
@@ -176,13 +229,25 @@ export function ControlPanel({
             disabled={isTraining}
             className="w-full disabled:opacity-50"
           />
+          <div className="flex justify-between text-xs text-[var(--text-muted)]">
+            <span>0.001 (slow)</span>
+            <span>1.0 (fast)</span>
+          </div>
         </div>
 
         {/* Batch Size */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-[var(--text-muted)]">Batch Size</span>
-            <span className="text-[var(--accent-secondary)]">{config.batchSize}</span>
+            <div className="flex items-center">
+              <span className="text-[var(--text-muted)]">Batch Size</span>
+              <InfoTooltip title="Batch Size">
+                <p>Number of training examples used in one weight update.</p>
+                <p className="mt-1"><strong>Small batch:</strong> Noisier gradients, can help escape local minima</p>
+                <p className="mt-1"><strong>Large batch:</strong> Smoother gradients, more stable training</p>
+                <p className="mt-1">For small datasets, batch size = 4 often works well.</p>
+              </InfoTooltip>
+            </div>
+            <span className="text-[var(--accent-secondary)] font-mono">{config.batchSize}</span>
           </div>
           <input
             type="range"
@@ -193,6 +258,10 @@ export function ControlPanel({
             onChange={(e) => onConfigChange({ batchSize: parseInt(e.target.value) })}
             className="w-full"
           />
+          <div className="flex justify-between text-xs text-[var(--text-muted)]">
+            <span>1 (noisy)</span>
+            <span>32 (smooth)</span>
+          </div>
         </div>
       </div>
     </div>
@@ -241,4 +310,3 @@ function ResetIcon() {
 }
 
 export default ControlPanel;
-
