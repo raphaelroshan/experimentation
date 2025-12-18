@@ -1,16 +1,96 @@
-# React + Vite
+# 🧠 Neural Network Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive, educational web app that visualizes how neural networks learn in real-time. Built with React, TensorFlow.js, and Framer Motion.
 
-Currently, two official plugins are available:
+![Neural Network Visualizer](https://img.shields.io/badge/React-18-blue) ![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-4.22-orange) ![License](https://img.shields.io/badge/License-MIT-green)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+- **Real-time Visualization**: Watch neurons activate and weights adjust during training
+- **3 Problem Types**:
+  - **XOR Problem** - Classic non-linear classification (Beginner)
+  - **Curve Fitting** - Regression with 5 different functions (Intermediate)
+  - **Digit Classification** - 8×8 pixel digit recognition (Advanced)
+- **Full Interactivity**: Adjust architecture, learning rate, activation functions, and batch size
+- **Educational Content**: Tooltips and guides explaining every concept
+- **Beautiful UI**: Dark theme with smooth animations and glow effects
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Quick Start
 
-## Expanding the ESLint configuration
+```bash
+# Clone the repository
+git clone https://github.com/ai-vibe-hackathon/Raphael-NN-Visualizer.git
+cd Raphael-NN-Visualizer
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## 🎮 How to Use
+
+1. **Select a Problem**: Choose XOR, Regression, or Digits
+2. **Configure the Network**: Adjust hidden layers, activation function, learning rate
+3. **Train**: Press "Train" to start, watch the network learn!
+4. **Explore**: Hover over (?) icons for educational explanations
+
+## 🏗️ Architecture
+
+```
+src/
+├── components/
+│   ├── NetworkVisualizer.jsx   # SVG-based network diagram
+│   ├── ControlPanel.jsx        # Training controls & hyperparameters
+│   ├── MetricsPanel.jsx        # Loss/accuracy charts
+│   ├── DataPreview.jsx         # Decision boundary & predictions
+│   ├── EducationalPanel.jsx    # Learning guides
+│   └── InfoTooltip.jsx         # Contextual help tooltips
+├── engine/
+│   ├── network.js              # TensorFlow.js wrapper
+│   ├── training.js             # Training loop controller
+│   └── problems/               # XOR, Regression, Digits generators
+└── hooks/
+    ├── useNetwork.js           # Network state management
+    └── useTraining.js          # Training state & controls
+```
+
+## 🧪 Problem Types Explained
+
+### XOR Problem
+The classic test for neural networks - learn the exclusive OR function. Demonstrates why hidden layers are necessary for non-linear problems.
+
+### Curve Fitting (Regression)
+Approximate mathematical functions (sine, quadratic, cubic, step, gaussian). Shows the "universal approximation theorem" in action.
+
+### Digit Classification
+Recognize 8×8 pixel images of digits (0-9). A simplified version of MNIST - real machine learning!
+
+## 🛠️ Tech Stack
+
+- **React 18** - UI framework
+- **TensorFlow.js** - Neural network training in the browser
+- **Framer Motion** - Smooth animations
+- **Tailwind CSS** - Styling
+- **Vite** - Fast build tool
+
+## 📚 Learning Resources
+
+This visualizer helps you understand:
+- Forward propagation
+- Backpropagation
+- Loss functions
+- Activation functions (ReLU, Sigmoid, Tanh)
+- Hyperparameter tuning
+- Overfitting and underfitting
+
+## 📄 License
+
+MIT License - feel free to use, modify, and share!
+
+---
+
+Built with ❤️ for the AI Vibe Hackathon
